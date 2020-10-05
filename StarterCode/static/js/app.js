@@ -113,15 +113,15 @@ function buildPage(subject){
           borderwidth: 0,
           bordercolor: "gray",
           steps: [
-            { range: [0,1], color: 'rgb(0, 0, 0)'},
-            { range: [1,2], color: 'rgb(0, 0, 0)'},
-            { range: [2,3], color: 'rgb(0, 0, 0)'},
-            { range: [3,4], color: 'rgb(0, 0, 0)'},
-            { range: [4,5], color: 'rgb(0, 0, 0)'},
-            { range: [5,6], color: 'rgb(0, 0, 0)'},
-            { range: [6,7], color: 'rgb(0, 0, 0)'},
-            { range: [7,8], color: 'rgb(0, 0, 0)'},
-            { range: [8,9], color: 'rgb(0, 105, 0)'}
+            { range: [0,1], color: 'rgb(0, 255, 0)'},
+            { range: [1,2], color: 'rgb(0, 220, 0)'},
+            { range: [2,3], color: 'rgb(0, 171, 0)'},
+            { range: [3,4], color: 'rgb(0, 144, 0)'},
+            { range: [4,5], color: 'rgb(0, 121, 0)'},
+            { range: [5,6], color: 'rgb(0, 105, 0)'},
+            { range: [6,7], color: 'rgb(0, 103, 93)'},
+            { range: [7,8], color: 'rgb(0, 186, 140)'},
+            { range: [8,9], color: 'rgb(97, 198, 167)'}
              
           ]
       
