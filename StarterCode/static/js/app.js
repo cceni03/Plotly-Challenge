@@ -121,25 +121,56 @@ function buildPage(subject){
             { range: [5,6], color: 'rgb(0, 105, 0)'},
             { range: [6,7], color: 'rgb(0, 103, 93)'},
             { range: [7,8], color: 'rgb(0, 186, 140)'},
-            { range: [8,9], color: 'rgb(97, 198, 167)'}
-             
-          ]
-      
+            { range: [8,9], color: 'rgb(97, 198, 167)'}  
+          ],
+          threshold: {
+            line: { color: "red", width: 4 },
+            thickness: 0.5,
+            value: 90
+          }
+        }
+     }
+  ];
 
-      }
+  var layout2 = {
+    title: "<b> Belly Button Washing Frequency</b><br>[Scrubs per Week]",
+    margin: { r: 25, l: 25, b: 25 },
+    font: { color: "black", family: "Arial", size: 20},
+  };
 
-      }
-      ]
+  Plotly.newPlot('gauge', data2, layout2);
+
+  //Bubble Chart
+
+  var otuIds2 = otuIdList[0].reverse();
+  var otuIdLabelsList2 = filteredSample.map(sample => sample.otu_ids);
+  var otuSamples2 = otuSamplesList[0].reverse();
 
 
-
-
-
-      // Bubble Chart
+  var trace3 = {
+    x: otuIds2,
+    y: otuSamples2,
+    mode: 'markers',
+    marker: {
+      color: ['blue', 'teal', 'green', 'brown' ],
+      opacity: [1, 0.8, 0.6, 0.4],
+      size: [40, 60, 80, 100]
+    }
+  };
+  
+  var data3 = [trace3];
+  
+  var layout3 = {
+    title: 'Marker Size',
+    showlegend: false,
+    height: 600,
+    width: 600
+  };
+  
+  Plotly.newPlot('bubble', data3, layout3);
 
   })
 }
-
 
 function init() {
 
@@ -150,7 +181,7 @@ function init() {
 
     var selector = d3.select("#selDataset");
 
-    console.log(data);
+    //console.log(data);
 
     data.names.forEach((ids) => {
       selector
@@ -173,5 +204,3 @@ function optionChanged(selection) {
 
 
 init()
-
-
