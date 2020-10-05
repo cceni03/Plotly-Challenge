@@ -108,12 +108,21 @@ function buildPage(subject){
         value: washFreq,
         gauge: {
           axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue"},
-          bar: { color: "blue"},
+          bar: { color: "gray"},
           bgcolor: "white",
           borderwidth: 0,
           bordercolor: "gray",
           steps: [
-            { range: [8,9], color: 'rgba(255, 255, 255, 0'}
+            { range: [0,1], color: 'rgb(0, 0, 0, .5)'},
+            { range: [1,2], color: 'rgb(0, 0, 0, .5)'},
+            { range: [2,3], color: 'rgb(0, 0, 0, .5)'},
+            { range: [3,4], color: 'rgb(0, 0, 0, .5)'},
+            { range: [4,5], color: 'rgb(0, 0, 0, .5)'},
+            { range: [5,6], color: 'rgb(0, 0, 0, .5)'},
+            { range: [6,7], color: 'rgb(0, 0, 0, .5)'},
+            { range: [7,8], color: 'rgb(0, 0, 0, .5)'},
+            { range: [8,9], color: 'rgb(0, 0, 0, .5)'}
+             
           ]
       
 
