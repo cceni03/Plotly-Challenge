@@ -24,7 +24,9 @@ function buildPage(subject){
 
     // Use dot notation to get at .otu_ids, .otu_labels, .otu_sample_values
     // Use slice for the horizontal bar chart
-
+    function filterBySubject(testData){
+      return testData.id == subject;
+    }
     // Plotly charts
     // Horizonatal bar chart- orientation: "h"
 
