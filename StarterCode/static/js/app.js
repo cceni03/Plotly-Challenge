@@ -29,7 +29,18 @@ function buildPage(subject){
     }
     // Plotly charts
     // Horizonatal bar chart- orientation: "h"
+    var trace1 = {
+      orientation: "h",
+      type: "bar",
+      x: otuSamples,
+      y: otuTextIds
+    };
 
+    // Create Data Array 
+    var data1 = [trace1];
+   
+    // Plot Chart
+    Plotly.newPlot("bar", data1);
 
     // Panel
     // Filter data.metadata based on subject
