@@ -13,194 +13,106 @@
 // - That takes as a parameter the user selection
 
 
-function buildPage(subject){
-
+function buildMetadata(sample) {
   d3.json("samples.json").then((data) => {
+    var metadata = data.metadata;
+    // Filter the data for the object with the desired sample number
+    var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+    var result = resultArray[0];
+    // Use d3 to select the panel with id of `#sample-metadata`
+    var PANEL = d3.select("#sample-metadata");
 
-    console.log(subject);
+    // Use `.html("") to clear any existing metadata
+    PANEL.html("");
 
-    // Filter data.samples based on subject
-    // The array that you get back you are interested in [0]
+    // Use `Object.entries` to add each key and value pair to the panel
+    // Hint: Inside the loop, you will need to use d3 to append new
+    // tags for each key-value in the metadata.
+    Object.entries(result).forEach(([key, value]) => {
+      PANEL.append("h6").text(`${key.toUpperCase()}: ${value}`);
+    });
 
-    // Use dot notation to get at .otu_ids, .otu_labels, .otu_sample_values
-    // Use slice for the horizontal bar chart
-    function filterBySubject(testData){
-      return testData.id == subject;
-    }
+  });
+}
+
+function buildCharts(sample) {
+  d3.json("samples.json").then((data) => {
     var samples = data.samples;
-    var filteredSample = samples.filter(filterBySubject);
-    console.log(samples);
-    console.log(filteredSample);
+    var resultArray = samples.filter(sampleObj => sampleObj.id == sample);
+    var result = resultArray[0];
 
-    var otuIds = otuIdList[0].slice(0, 10).reverse();
-    var otuIdLabelsList = filteredSample.map(sample => sample.otu_ids);
-    var otuIdList = filteredSample.map(sample => sample.otu_ids);
-    var otuSamplesList = filteredSample.map(sample => sample.sample_values);
-    var otuSamples = otuSamplesList[0].slice(0,10).reverse();
-    var TextIds = otuIds.map(id => 'OTU $ {id}');
-    console.log(otuIds);
-    console.log(filteredSample);
-    console.log(otuSamples);
-    console.log(otuTextIds);
+    var otu_ids = result.otu_ids;
+    var otu_labels = result.otu_labels;
+    var sample_values = result.sample_values;
 
-    // Plotly Charts
-    // Horizonatal bar chart- orientation: "h"
-    var trace1 = {
-      orientation: "h",
-      type: "bar",
-      x: otuSamples,
-      y: otuTextIds
+    // Build a Bubble Chart
+    var bubbleLayout = {
+      title: "Sample Bubble Chart",
+      margin: { t: 0 },
+      hovermode: "closest",
+      xaxis: { title: "OTU ID" },
+      margin: { t: 30}
+    };
+    var bubbleData = [
+      {
+        x: otu_ids,
+        y: sample_values,
+        text: otu_labels,
+        mode: "markers",
+        marker: {
+          size: sample_values,
+          color: otu_ids,
+          colorscale: "Earth"
+        }
+      }
+    ];
+
+    Plotly.newPlot("bubble", bubbleData, bubbleLayout);
+
+    var yticks = otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
+    var barData = [
+      {
+        y: yticks,
+        x: sample_values.slice(0, 10).reverse(),
+        text: otu_labels.slice(0, 10).reverse(),
+        type: "bar",
+        orientation: "h",
+      }
+    ];
+
+    var barLayout = {
+      title: "OTU IDs",
+      margin: { t: 30, l: 100 }
     };
 
-    // Create Data Array 
-    var data1 = [trace1];
-
-    // Layout
-    var layout = {
-      margin: {
-        b: 100,
-        l: 100,
-        r: 100,
-        t: 100
-      }
-    }
-   
-    // Plot Chart
-    Plotly.newPlot("bar", data1, layout);
-
-    // Panel
-    // Filter data.metadata based on subject
-    // The array that you get back you are interested in [0]
-
-    var panel = d3.select("#sample-metadata");
-
-    panel.html("");
-
-    var panelData = data.metadata;
-    console.log(panelData);
-
-    var filteredPanel = panelData.filter(filterBySubject);
-    console.log(filteredPanel[0]);
-
-    var table = panel.append("table");
-
-    Object.entries(filteredPanel[0]).forEach(([key, value]) => {
-      // One idea is to append header elements (h5 or h6) of the key: value
-      console.log(key);
-      console.log(value);
-
-      var cell1 = row.append("td");
-      cell1.text(key);
-
-      var cell2 = row.append("td");
-      cell2.text(value);
-
-      var row = table.append("tr");
-    })
-      // Gauge Chart
-      var washFreq = filtered[0].wfreq;
-      console.log(washFreq);
-
-      var data2 = [{
-        name: "Scrubs per Week",
-        type: "indicator",
-        mode: "gauge+number",
-        value: washFreq,
-        gauge: {
-          axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue"},
-          bar: { color: "gray"},
-          bgcolor: "white",
-          borderwidth: 0,
-          bordercolor: "gray",
-          steps: [
-            { range: [0,1], color: 'rgb(0, 255, 0)'},
-            { range: [1,2], color: 'rgb(0, 220, 0)'},
-            { range: [2,3], color: 'rgb(0, 171, 0)'},
-            { range: [3,4], color: 'rgb(0, 144, 0)'},
-            { range: [4,5], color: 'rgb(0, 121, 0)'},
-            { range: [5,6], color: 'rgb(0, 105, 0)'},
-            { range: [6,7], color: 'rgb(0, 103, 93)'},
-            { range: [7,8], color: 'rgb(0, 186, 140)'},
-            { range: [8,9], color: 'rgb(97, 198, 167)'}  
-          ],
-          threshold: {
-            line: { color: "red", width: 4 },
-            thickness: 0.5,
-            value: 90
-          }
-        }
-     }
-  ];
-
-  var layout2 = {
-    title: "<b> Belly Button Washing Frequency</b><br>[Scrubs per Week]",
-    margin: { r: 25, l: 25, b: 25 },
-    font: { color: "black", family: "Arial", size: 20},
-  };
-
-  Plotly.newPlot('gauge', data2, layout2);
-
-  //Bubble Chart
-
-  var otuIds2 = otuIdList[0].reverse();
-  var otuIdLabelsList2 = filteredSample.map(sample => sample.otu_ids);
-  var otuSamples2 = otuSamplesList[0].reverse();
-
-
-  var trace3 = {
-    x: otuIds2,
-    y: otuSamples2,
-    mode: 'markers',
-    marker: {
-      color: ['blue', 'teal', 'green', 'brown' ],
-      opacity: [1, 0.8, 0.6, 0.4],
-      size: [40, 60, 80, 100]
-    }
-  };
-  
-  var data3 = [trace3];
-  
-  var layout3 = {
-    title: 'Marker Size',
-    showlegend: false,
-    height: 600,
-    width: 600
-  };
-  
-  Plotly.newPlot('bubble', data3, layout3);
-
-  })
+    Plotly.newPlot("bar", barData, barLayout);
+  });
 }
 
 function init() {
 
-  // Fill dropdown with IDs
-  // Get firstOne id and call buildPage with that id
+  var selector = d3.select("#selDataset");
 
   d3.json("samples.json").then((data) => {
+    var sampleNames = data.names;
 
-    var selector = d3.select("#selDataset");
-
-    //console.log(data);
-
-    data.names.forEach((ids) => {
+    sampleNames.forEach((sample) => {
       selector
         .append("option")
-        .text(ids)
-        .property("value", ids)
-    })
+        .text(sample)
+        .property("value", sample);
+    });
 
-    firstOne = data.names[0];
-
-    buildPage(firstOne);
-
-  })
+    var firstSample = sampleNames[0];
+    buildCharts(firstSample);
+    buildMetadata(firstSample);
+  });
 }
 
-function optionChanged(selection) {
-
-  buildPage(selection);
+function optionChanged(newSample) {
+  buildCharts(newSample);
+  buildMetadata(newSample);
 }
 
 
-init()
+init();
